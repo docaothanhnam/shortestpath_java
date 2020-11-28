@@ -13,16 +13,21 @@ import static Client.myFrame.cbbBeginPoint;
 import static Client.myFrame.pContent;
 import static Client.myFrame.radUndirected;
 import com.mxgraph.layout.mxCircleLayout;
+import com.mxgraph.layout.mxIGraphLayout;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.model.mxICell;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxCellRenderer;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxUtils;
 import myEdge.MyEdgeWeight;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,6 +43,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultEdge;
@@ -82,7 +88,6 @@ public final class Client extends myFrame {
 //                System.out.println("---" + tmpLine);
                 for (String s : tmpLine) {
                     System.out.println("--" + s);
-
                 }
 
                 if (tmpLine[0].equals("1")) {
@@ -140,6 +145,9 @@ public final class Client extends myFrame {
                     }
 
                 }
+                
+                exportPNG ex = new exportPNG();
+                btnExportPng.addActionListener(ex);
 
                 if (line == "bye") {
                     closeConnectToServer();
@@ -558,6 +566,21 @@ public final class Client extends myFrame {
 
         }
     }
+  //====================create  btn export PNG========================================
+    public class exportPNG implements ActionListener{
+        public exportPNG(){
+            
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                givenAdaptedGraph_whenWriteBufferedImage_thenFileShouldExist(x);
+            } catch (IOException ex) {
+                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 //=========================== cac function connect ===================================
 
     public void connectToServer() throws UnknownHostException, SocketException {
@@ -596,5 +619,18 @@ public final class Client extends myFrame {
         System.out.println("Client get: " + tmp + " from server");
         return tmp;
     }
+    
+    public void givenAdaptedGraph_whenWriteBufferedImage_thenFileShouldExist(JGraphXAdapter graphAdapter) throws IOException {
 
+//        JGraphXAdapter<String, MyEdgeWeight> graphAdapter = new JGraphXAdapter<>(g);
+        mxIGraphLayout layout = new mxCircleLayout(graphAdapter);
+        layout.execute(graphAdapter.getDefaultParent());
+
+        BufferedImage image
+                = mxCellRenderer.createBufferedImage(graphAdapter, null, 2, Color.WHITE, true, null);
+        File imgFile = new File("src/graph.png");
+        ImageIO.write(image, "PNG", imgFile);
+        imgFile.exists();
+//        assertTrue(imgFile.exists());
+    }
 }
