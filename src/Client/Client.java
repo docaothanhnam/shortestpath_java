@@ -624,6 +624,7 @@ public final class Client extends myFrame {
 
 //        JGraphXAdapter<String, MyEdgeWeight> graphAdapter = new JGraphXAdapter<>(g);
         mxIGraphLayout layout = new mxCircleLayout(graphAdapter);
+        
         layout.execute(graphAdapter.getDefaultParent());
 
         BufferedImage image
