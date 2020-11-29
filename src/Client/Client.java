@@ -319,12 +319,11 @@ public final class Client extends myFrame {
             System.out.println("type" + mo.getType());
             if (mo.getType() == 1) {
                 DirectedWeightedMultigraph dg = createDirectedGraph(vertex, edge);
-                DirectedWeightedMultigraph wm = createDirectedGraphWithMyWeigthEdge(vertex, edge);
-                x = new JGraphXAdapter<>(wm);
+                DirectedWeightedMultigraph dwm = createDirectedGraphWithMyWeigthEdge(vertex, edge);
+                x = new JGraphXAdapter<>(dwm);
                 jgxAdapter = new JGraphXAdapter<>(dg);
                 createDirectedGraphVisualization(x, pContent);
 
-                createDirectedGraphVisualization(jgxAdapter, pContent);
             } else {
                 WeightedMultigraph udg = createUnDirectedGraph(vertex, edge);
                 WeightedMultigraph wm = createUnDirectedGraphWithMyWeigthEdge(vertex, edge);
@@ -427,37 +426,31 @@ public final class Client extends myFrame {
     public DirectedWeightedMultigraph createDirectedGraphWithMyWeigthEdge(String V, String E) {
         ArrayList<String> Vertexs = new ArrayList<>();
         ArrayList<String> Edges = new ArrayList<>();
-//        ArrayList<DefaultWeightedEdge> arrDefaultWeightedEdges = new ArrayList<>();
         ArrayList<MyEdgeWeight> arrWeightedEdge = new ArrayList<>();
 
         Vertexs = changeStringToArr(V);
         Edges = changeStringToArr(E);
 
-//        WeightedMultigraph udg = new WeightedMultigraph(DefaultWeightedEdge.class);
+
         DirectedWeightedMultigraph dgtemp = new DirectedWeightedMultigraph(MyEdgeWeight.class);
         for (String v : Vertexs) {
             dgtemp.addVertex(v);
         }
-//        DefaultWeightedEdge[] de = new DefaultWeightedEdge[Edges.size()];
+
         MyEdgeWeight[] we = new MyEdgeWeight[Edges.size()];
         for (int i = 0; i < Edges.size(); i++) {
             String e = Edges.get(i);
             String[] temp = e.split(";");
 
-//            de[i] = (DefaultWeightedEdge) udg.addEdge(temp[0], temp[1]);
             we[i] = (MyEdgeWeight) dgtemp.addEdge(temp[0], temp[1]);
 
-//            udg.setEdgeWeight(de[i], Integer.valueOf(temp[2]));
             dgtemp.setEdgeWeight(we[i], Integer.valueOf(temp[2]));
 
-//            arrDefaultWeightedEdges.add(de[i]);
             arrWeightedEdge.add(we[i]);
-//            System.out.println("-----:"+ we[i]);
+
         }
         mo.setMyWeight(arrWeightedEdge);
-//        mo.setArrEdge(arrDefaultWeightedEdges);
-//        System.out.println("arrEdge :" + arrDefaultWeightedEdges);
-//        System.out.println("arrEdge get:" + mo.getArrEdge());
+
         return dgtemp;
     }
 //============================function tao undirect graph===================
@@ -530,8 +523,7 @@ public final class Client extends myFrame {
         System.out.println("jkl:" + E);
 
         System.out.println("abc:" + mo.getArrEdge());
-//        ArrayList<DefaultWeightedEdge> defEdege = mo.getArrEdge();
-//        System.out.println("222: "+mo.getArrEdge());
+
 
         ArrayList<MyEdgeWeight> Edge = mo.getMyWeight();
         /// chuwa lay duoc mang defaultEdge
@@ -594,10 +586,6 @@ public final class Client extends myFrame {
 
     public void sendToServer(String line) throws IOException {
         System.out.print("Client input: ");
-//        String tmp = line;
-//                                MenuOption moUrl = new MenuOption();
-//                                System.out.println("res"+moUrl.getURL());
-//                                String tmp = moUrl.getURL();
         byte[] data = line.getBytes();
         dpsend = new DatagramPacket(data, data.length, add, destPort);
         System.out.println("Client sent " + line + " to " + add.getHostAddress()
@@ -624,26 +612,37 @@ public final class Client extends myFrame {
     
     public void givenAdaptedGraph_whenWriteBufferedImage_thenFileShouldExist(JGraphXAdapter graphAdapter) throws IOException {
 
-//        JGraphXAdapter<String, MyEdgeWeight> graphAdapter = new JGraphXAdapter<>(g);
         mxIGraphLayout layout = new mxCircleLayout(graphAdapter);
         
         layout.execute(graphAdapter.getDefaultParent());
-        
-        
-        
-//        int radius = RADIUD;
-//        layout.setX0((pContent.getWidth() / 2.0) - radius);
-//        layout.setY0((pContent.getHeight() / 2.0) - radius);
-//        layout.setRadius(radius);
-//        layout.setMoveCircle(true);
-//        layout.execute(x.getDefaultParent());
 
         BufferedImage image = mxCellRenderer
                 .createBufferedImage(graphAdapter, null, 2, Color.WHITE, true, null);
         
         File imgFile = new File("src/graph.png");
-        ImageIO.write(image, "PNG", imgFile);
+        
+        ImageIO.write(scale(image,pContent.getWidth(),pContent.getHeight()), "PNG", imgFile);
         imgFile.exists();
 //        assertTrue(imgFile.exists());
+    }
+    
+    public static BufferedImage scale(BufferedImage src, int w, int h) {
+        BufferedImage img
+                = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        int x, y;
+        int ww = src.getWidth();
+        int hh = src.getHeight();
+        int[] ys = new int[h];
+        for (y = 0; y < h; y++) {
+            ys[y] = y * hh / h;
+        }
+        for (x = 0; x < w; x++) {
+            int newX = x * ww / w;
+            for (y = 0; y < h; y++) {
+                int col = src.getRGB(newX, ys[y]);
+                img.setRGB(x, y, col);
+            }
+        }
+        return img;
     }
 }
