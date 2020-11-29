@@ -88,6 +88,7 @@ public final class Client extends myFrame {
 //                System.out.println("---" + tmpLine);
                 for (String s : tmpLine) {
                     System.out.println("--" + s);
+
                 }
 
                 if (tmpLine[0].equals("1")) {
@@ -347,13 +348,13 @@ public final class Client extends myFrame {
 //        resize(DEFAULT_SIZE);
 
         mxCircleLayout layout = new mxCircleLayout(x);
-
+//        mxIGraphLayout l =new 
         // center the circle
         int radius = RADIUD;
         layout.setX0((pContent.getWidth() / 2) - radius);
         layout.setY0((pContent.getHeight() / 2) - radius);
         layout.setRadius(radius);
-        layout.setMoveCircle(true);
+        layout.setMoveCircle(false);
         layout.execute(x.getDefaultParent());
 
     }
@@ -370,13 +371,14 @@ public final class Client extends myFrame {
         p.add(component, BorderLayout.CENTER);
 
         mxCircleLayout layout = new mxCircleLayout(x);
-
+        
         // center the circle
         int radius = RADIUD;
         layout.setX0((pContent.getWidth() / 2.0) - radius);
         layout.setY0((pContent.getHeight() / 2.0) - radius);
         layout.setRadius(radius);
-        layout.setMoveCircle(true);
+        
+        layout.setMoveCircle(false);
         layout.execute(x.getDefaultParent());
 
     }
@@ -626,9 +628,19 @@ public final class Client extends myFrame {
         mxIGraphLayout layout = new mxCircleLayout(graphAdapter);
         
         layout.execute(graphAdapter.getDefaultParent());
+        
+        
+        
+//        int radius = RADIUD;
+//        layout.setX0((pContent.getWidth() / 2.0) - radius);
+//        layout.setY0((pContent.getHeight() / 2.0) - radius);
+//        layout.setRadius(radius);
+//        layout.setMoveCircle(true);
+//        layout.execute(x.getDefaultParent());
 
-        BufferedImage image
-                = mxCellRenderer.createBufferedImage(graphAdapter, null, 2, Color.WHITE, true, null);
+        BufferedImage image = mxCellRenderer
+                .createBufferedImage(graphAdapter, null, 2, Color.WHITE, true, null);
+        
         File imgFile = new File("src/graph.png");
         ImageIO.write(image, "PNG", imgFile);
         imgFile.exists();
