@@ -64,11 +64,12 @@ public class myFrame extends JFrame implements ActionListener{
     public static JComboBox<String> cbbBeginPoint = new JComboBox<>();
     public static JComboBox<String> cbbEndPoint = new JComboBox<>();
 
-    private int WIDTH = 1300, HEIGHT = 700;
+    private int WIDTH = 1100, HEIGHT = 700;
     public static final Dimension DEFAULT_SIZE = new Dimension(1200, 1000);
     int WIDTH_SELECT, HEIGHT_SELECT;
     String fileName;
     public static String URL;
+    public static Color menuColor;
     
 //    File f = null;
     
@@ -84,7 +85,7 @@ public class myFrame extends JFrame implements ActionListener{
 
     public void inIt() throws FileNotFoundException {
 
-        setLayout(new BorderLayout(5, 5));
+        setLayout(new BorderLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(WIDTH, HEIGHT);
         
@@ -100,13 +101,7 @@ public class myFrame extends JFrame implements ActionListener{
         
         
         fdsave = new FileDialog(new Frame(),"Save File",FileDialog.SAVE);
-//        fdsave.setFilenameFilter(new FilenameFilter() {
-//            public boolean accept(File dir, String name) {
-//                return name.endsWith(".png");
-//            }
-//        });
         fdsave.setFile("*.png");
-//        fdsave.setType(Type.);    
                 
         lUrl= new JLabel("File:");
 
@@ -120,7 +115,7 @@ public class myFrame extends JFrame implements ActionListener{
         txtLength.setBorder(new LineBorder(Color.BLACK));
 //        radUndirected.isSelected();
         // panel content
-        
+        lShortestPathLength.setHorizontalAlignment(JLabel.CENTER);
        
         pContent = new JPanel(new BorderLayout());
 //        pContent.setBackground(Color.LIGHT_GRAY);

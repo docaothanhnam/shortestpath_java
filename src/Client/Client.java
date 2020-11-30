@@ -10,6 +10,7 @@ package Client;
  * @author Nam Do
  */
 import static Client.myFrame.cbbBeginPoint;
+import static Client.myFrame.fd;
 import static Client.myFrame.pContent;
 import static Client.myFrame.radUndirected;
 import com.mxgraph.layout.mxCircleLayout;
@@ -47,6 +48,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -79,9 +81,13 @@ public final class Client extends myFrame {
             String line = "";
 
             while (true) {
+                
                 FileChooser fc = new FileChooser(); // send to server data
                 btnChooseFile.addActionListener(fc);
-
+//                if(mo.getURL() != null){
+//                    
+//                    System.out.println("asdas"+mo.getURL());
+//                }
 //                    btnChooseFile.
                 line = receiveFromServer();
                 System.out.println("res1:" + line);
@@ -124,7 +130,7 @@ public final class Client extends myFrame {
 
                             findShortestPath fsp = new findShortestPath();
                             btnShortestPath.addActionListener(fsp);
-
+                            
                             exportPNG ex = new exportPNG();
                             btnExportPng.addActionListener(ex);
 
@@ -163,6 +169,7 @@ public final class Client extends myFrame {
 
                         paintEdge(changeStringToArr(templine[0]), x);
                         txtLength.setText(templine[1]);
+                        txtLength.setHorizontalAlignment(JTextField.CENTER);
                         txtLength.repaint();
                     }
 
@@ -203,6 +210,12 @@ public final class Client extends myFrame {
         public void actionPerformed(ActionEvent e) {
 
             fd.setVisible(true);
+            if(fd.getFile()==null){
+                JOptionPane.showMessageDialog(null, "File have not chosen yet");
+            }
+            else{
+            
+            
             fileName = fd.getFile();
             lUrl.setText("File : " + fileName);
             char c = 92;
@@ -238,6 +251,8 @@ public final class Client extends myFrame {
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             }
             lUrl.repaint();
+            
+            }
         }
 
     }
@@ -373,7 +388,7 @@ public final class Client extends myFrame {
         layout.setRadius(radius);
         layout.setMoveCircle(false);
         layout.execute(x.getDefaultParent());
-
+        setVisible(true);
     }
 
     public void createUnDirectedGraphVisualization(JGraphXAdapter x, JPanel p) {
@@ -397,6 +412,7 @@ public final class Client extends myFrame {
 
         layout.setMoveCircle(false);
         layout.execute(x.getDefaultParent());
+        setVisible(true);
 
     }
 
@@ -631,8 +647,13 @@ public final class Client extends myFrame {
 
     public void givenAdaptedGraph_whenWriteBufferedImage_thenFileShouldExist(JGraphXAdapter graphAdapter, String nameFile) throws IOException {
 
-        mxIGraphLayout layout = new mxCircleLayout(graphAdapter);
-
+        mxCircleLayout layout = new mxCircleLayout(graphAdapter);
+        int radius = RADIUD;
+        layout.setX0((pContent.getWidth() / 2) - radius);
+        layout.setY0((pContent.getHeight() / 2) - radius);
+        layout.setRadius(radius);
+        layout.setMoveCircle(false);
+        layout.execute(x.getDefaultParent());
         layout.execute(graphAdapter.getDefaultParent());
 
         BufferedImage image = mxCellRenderer
@@ -640,9 +661,8 @@ public final class Client extends myFrame {
 
         File imgFile = new File("src/" + nameFile + ".png");
 
-        ImageIO.write(scale(image, pContent.getWidth(), pContent.getHeight()), "PNG", imgFile);
+        ImageIO.write(scale(image, pContent.getHeight(), pContent.getHeight()), "PNG", imgFile);
         imgFile.exists();
-//        assertTrue(imgFile.exists());
     }
 
     public static BufferedImage scale(BufferedImage src, int w, int h) {
