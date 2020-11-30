@@ -16,6 +16,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FileDialog;
+import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -64,12 +65,12 @@ public class myFrame extends JFrame implements ActionListener{
     public static JComboBox<String> cbbBeginPoint = new JComboBox<>();
     public static JComboBox<String> cbbEndPoint = new JComboBox<>();
 
-    private int WIDTH = 1100, HEIGHT = 700;
+    public static int WIDTH = 1100, HEIGHT = 700;
     public static final Dimension DEFAULT_SIZE = new Dimension(1200, 1000);
     int WIDTH_SELECT, HEIGHT_SELECT;
     String fileName;
     public static String URL;
-    public static Color midNightBlue , indioInk, blueBerry, periwinkle;
+    public static Color midNightBlue , indioInk, blueBerry, periwinkle, cContent;
     public TitledBorder bChooseFile, bGraphType, bCbb, bBtn;
 //    File f = null;
     
@@ -89,7 +90,7 @@ public class myFrame extends JFrame implements ActionListener{
         indioInk = new Color(40, 54, 85);
         blueBerry = new Color(77, 100, 141);
         periwinkle = new Color(208, 225, 249);
-        
+        cContent = new Color(124, 135, 161);
         
         getContentPane().setBackground(Color.BLUE);
         setLayout(new BorderLayout());
@@ -148,8 +149,8 @@ public class myFrame extends JFrame implements ActionListener{
         // panel content
         lShortestPathLength.setHorizontalAlignment(JLabel.CENTER);
        
-        pContent = new JPanel(new BorderLayout());
-//        pContent.setBackground(Color.LIGHT_GRAY);
+        pContent = new JPanel();
+        pContent.setBackground(cContent);
         pContent.setBorder(new LineBorder(Color.WHITE,2));
         
 //        jgxAdapter = new JGraphXAdapter<>(dg);

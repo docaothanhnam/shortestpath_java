@@ -9,25 +9,23 @@ package Client;
  *
  * @author Nam Do
  */
-import de.javasoft.synthetica.dark.SyntheticaDarkLookAndFeel;
+//import de.javasoft.synthetica.dark.SyntheticaDarkLookAndFeel;
 import static Client.myFrame.cbbBeginPoint;
 import static Client.myFrame.fd;
 import static Client.myFrame.pContent;
 import static Client.myFrame.radUndirected;
 import com.mxgraph.layout.mxCircleLayout;
-import com.mxgraph.layout.mxIGraphLayout;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.model.mxICell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxCellRenderer;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxUtils;
-import com.sun.java.swing.plaf.motif.MotifLookAndFeel;
-import com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel;
-import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 import myEdge.MyEdgeWeight;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -49,16 +47,13 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
+import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.plaf.metal.MetalLookAndFeel;
-import javax.swing.plaf.multi.MultiLookAndFeel;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
-import javax.swing.plaf.synth.SynthLookAndFeel;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -81,7 +76,7 @@ public final class Client extends myFrame {
     public JGraphXAdapter<String, MyEdgeWeight> x;
     MenuOption mo = new MenuOption();
 //    public static String temp;
-    public int RADIUD = 300;
+    public int RADIUS = 300;
 
     public Client(String title) throws FileNotFoundException {
 
@@ -388,19 +383,24 @@ public final class Client extends myFrame {
         mxGraphComponent component = new mxGraphComponent(x);
         component.setConnectable(false);
         component.getGraph().setAllowDanglingEdges(false);
-        p.add(component, BorderLayout.CENTER);
+//        p.add(component);
 //        resize(DEFAULT_SIZE);
 
         mxCircleLayout layout = new mxCircleLayout(x);
 //        mxIGraphLayout l =new 
         // center the circle
-        int radius = RADIUD;
+        int radius = RADIUS;
         layout.setX0((pContent.getWidth() / 2) - radius);
         layout.setY0((pContent.getHeight() / 2) - radius);
         layout.setRadius(radius);
         layout.setMoveCircle(false);
         layout.execute(x.getDefaultParent());
+        
+        p.setLayout(new FlowLayout(FlowLayout.CENTER,20,20 ));
+        p.setBackground(cContent);
+        p.add(component);
         setVisible(true);
+        
     }
 
     public void createUnDirectedGraphVisualization(JGraphXAdapter x, JPanel p) {
@@ -411,19 +411,24 @@ public final class Client extends myFrame {
         Collection<Object> cells = graphModel.getCells().values();
         mxUtils.setCellStyles(component.getGraph().getModel(),
                 cells.toArray(), mxConstants.STYLE_ENDARROW, mxConstants.NONE);
-
-        p.add(component, BorderLayout.CENTER);
-
+        
+        int radius = RADIUS;
         mxCircleLayout layout = new mxCircleLayout(x);
-
+//        System.out.println((pContent.getWidth() / 2.0) - radius);
         // center the circle
-        int radius = RADIUD;
+        
         layout.setX0((pContent.getWidth() / 2.0) - radius);
         layout.setY0((pContent.getHeight() / 2.0) - radius);
         layout.setRadius(radius);
-
+        
         layout.setMoveCircle(false);
         layout.execute(x.getDefaultParent());
+        
+        
+//        component.setBounds(40, 40, 620, 620);
+        p.setLayout(new FlowLayout(FlowLayout.CENTER,20,20 ));
+        p.setBackground(cContent);
+        p.add(component);
         setVisible(true);
 
     }
@@ -660,7 +665,7 @@ public final class Client extends myFrame {
     public void givenAdaptedGraph_whenWriteBufferedImage_thenFileShouldExist(JGraphXAdapter graphAdapter, String nameFile) throws IOException {
 
         mxCircleLayout layout = new mxCircleLayout(graphAdapter);
-        int radius = RADIUD;
+        int radius = RADIUS;
         layout.setX0((pContent.getWidth() / 2) - radius);
         layout.setY0((pContent.getHeight() / 2) - radius);
         layout.setRadius(radius);
