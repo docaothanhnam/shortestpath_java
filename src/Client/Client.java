@@ -621,7 +621,7 @@ public final class Client extends myFrame {
         
         File imgFile = new File("src/graph.png");
         
-        ImageIO.write(scale(image,pContent.getWidth(),pContent.getHeight()), "PNG", imgFile);
+        ImageIO.write(scale(image,pContent.getHeight(),pContent.getHeight()), "PNG", imgFile);
         imgFile.exists();
 //        assertTrue(imgFile.exists());
     }
