@@ -27,6 +27,10 @@ public final class Server {
     public static DatagramPacket dpreceive, dpsend;
     ArrayList<String> Edges = new ArrayList<>();
     ArrayList<String> Vertexs = new ArrayList<>();
+    static AES_Encryption aes = new AES_Encryption();
+    static RSA_Encryption rsa = new RSA_Encryption();
+    int[] ktKey = new int[10000];
+    String[] keyClient = new String[10000];
     public Server() {
         try {
             
@@ -103,12 +107,31 @@ public final class Server {
     }
 
     public String receiveFromClient() throws IOException {
-        socket.receive(dpreceive);
-        String tmp = new String(dpreceive.getData(), 0, dpreceive.getLength());
+        String tmp = "";
+        if(ktKey[dpreceive.getPort()] == 0) {
+                            socket.receive(dpreceive);
+                             tmp = new String(dpreceive.getData(), 0, dpreceive.getLength());
+                       
+
+                            keyClient[dpreceive.getPort()] = rsa.Decrpytion(tmp);
+                            System.out.println(tmp);
+                            tmp = "Kết nối thành công";
+                            dpsend = new DatagramPacket(tmp.getBytes(),tmp .getBytes().length, 
+                                            dpreceive.getAddress(), dpreceive.getPort());
+    //                        System.out.println("Server sent back " + tmp + " to client");
+                           socket.send(dpsend);
+                           ktKey[dpreceive.getPort()] = 1;
+                
+            }else{
+                socket.receive(dpreceive);
+        tmp = new String(dpreceive.getData(), 0, dpreceive.getLength());
+        tmp = aes.decrypt(tmp,keyClient[dpreceive.getPort()]);
         System.out.println("Server received: " + tmp + " from "
                 + dpreceive.getAddress().getHostAddress() + " at port "
                 + socket.getLocalPort());
-        return tmp;
+       
+            }
+         return tmp;
     }
 
     public void closeConnect() {
@@ -118,8 +141,9 @@ public final class Server {
     }
 
     public void sendToClient(String tmp) throws IOException {
+        tmp = aes.encrypt(tmp, keyClient[dpreceive.getPort()]);
         dpsend = new DatagramPacket(tmp.getBytes(), tmp.getBytes().length,
-                dpreceive.getAddress(), dpreceive.getPort());
+        dpreceive.getAddress(), dpreceive.getPort());
         System.out.println("Server sent back " + tmp + " to client");
         socket.send(dpsend);
     }

@@ -40,6 +40,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,6 +67,9 @@ public final class Client extends myFrame {
     public JGraphXAdapter<String, DefaultEdge> jgxAdapter;
     public JGraphXAdapter<String, MyEdgeWeight> x;
     MenuOption mo = new MenuOption();
+    static AES_Encryption aes = new AES_Encryption();
+    static RSA_Encryption rsa = new RSA_Encryption();
+    String keyClient = taoKey();
 //    public static String temp;
     public int RADIUD = 300;
 
@@ -74,7 +78,9 @@ public final class Client extends myFrame {
         super(title);
         try {
             connectToServer();
+            
             String line = "";
+           
 
             while (true) {
                 FileChooser fc = new FileChooser(); // send to server data
@@ -577,14 +583,24 @@ public final class Client extends myFrame {
     }
 //=========================== cac function connect ===================================
 
-    public void connectToServer() throws UnknownHostException, SocketException {
+    public void connectToServer() throws UnknownHostException, SocketException, IOException {
 
         add = InetAddress.getByName(hostname);//UnknownHostException
         socket = new DatagramSocket();	//SocketException
         stdIn = new Scanner(System.in);
+         String key = rsa.Encrpytion(keyClient);
+                byte[] data = key.getBytes();
+                
+                dpsend = new DatagramPacket(data, data.length, add, destPort);
+
+                socket.send(dpsend);
     }
 
     public void sendToServer(String line) throws IOException {
+        line = aes.encrypt(line, keyClient); 
+            
+            
+
         System.out.print("Client input: ");
         byte[] data = line.getBytes();
         dpsend = new DatagramPacket(data, data.length, add, destPort);
@@ -603,9 +619,11 @@ public final class Client extends myFrame {
     }
 
     public String receiveFromServer() throws IOException {
+        
         dpreceive = new DatagramPacket(new byte[512], 512);
         socket.receive(dpreceive);
         String tmp = new String(dpreceive.getData(), 0, dpreceive.getLength());
+        tmp = aes.decrypt(tmp, keyClient);
         System.out.println("Client get: " + tmp + " from server");
         return tmp;
     }
@@ -644,5 +662,25 @@ public final class Client extends myFrame {
             }
         }
         return img;
+    }
+    public static String taoKey()
+    {
+        Random ran = new Random();
+        int top = 6;
+        char data = ' ';
+        String dat = "";
+
+        for (int i=0; i<=top; i++) {
+          data = (char)(ran.nextInt(25)+97);
+          dat = data + dat;
+        }
+        return dat;
+    }
+    public static int setport()
+    {
+        Random ran = new Random();
+
+        int value = ran.nextInt((10000 - 1001) - 1);
+        return value;
     }
 }
