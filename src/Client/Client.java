@@ -9,6 +9,7 @@ package Client;
  *
  * @author Nam Do
  */
+import de.javasoft.synthetica.dark.SyntheticaDarkLookAndFeel;
 import static Client.myFrame.cbbBeginPoint;
 import static Client.myFrame.fd;
 import static Client.myFrame.pContent;
@@ -21,6 +22,9 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxCellRenderer;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxUtils;
+import com.sun.java.swing.plaf.motif.MotifLookAndFeel;
+import com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel;
+import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 import myEdge.MyEdgeWeight;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -49,6 +53,12 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.plaf.multi.MultiLookAndFeel;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
+import javax.swing.plaf.synth.SynthLookAndFeel;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -192,8 +202,10 @@ public final class Client extends myFrame {
     }
 //================================Main====================================
 
-    public static void main(String[] args) throws FileNotFoundException, IOException {
+    public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+        UIManager.setLookAndFeel(new NimbusLookAndFeel());
         Client client = new Client("shortestpath");
+        
     }
 //=================================ActionListener for btnChooseFile ===================
 

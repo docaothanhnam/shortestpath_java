@@ -69,8 +69,8 @@ public class myFrame extends JFrame implements ActionListener{
     int WIDTH_SELECT, HEIGHT_SELECT;
     String fileName;
     public static String URL;
-    public static Color menuColor;
-    
+    public static Color midNightBlue , indioInk, blueBerry, periwinkle;
+    public TitledBorder bChooseFile, bGraphType, bCbb, bBtn;
 //    File f = null;
     
     
@@ -84,10 +84,21 @@ public class myFrame extends JFrame implements ActionListener{
     
 
     public void inIt() throws FileNotFoundException {
-
+        
+        midNightBlue = new Color(30, 31, 38);
+        indioInk = new Color(40, 54, 85);
+        blueBerry = new Color(77, 100, 141);
+        periwinkle = new Color(208, 225, 249);
+        
+        
+        getContentPane().setBackground(Color.BLUE);
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(WIDTH, HEIGHT);
+//        setUndecorated(true);
+        
+//        int x=1;// use x value from 1 to 8
+//    getRootPane().setWindowDecorationStyle( x);
         
         fd = new FileDialog(new Frame());
         fd.setLocationRelativeTo(null);
@@ -104,13 +115,33 @@ public class myFrame extends JFrame implements ActionListener{
         fdsave.setFile("*.png");
                 
         lUrl= new JLabel("File:");
+        lUrl.setForeground(periwinkle);
+        
+        
+        
+        
+        bChooseFile = new TitledBorder("Choose File ");
+        bGraphType = new TitledBorder("Graph Type ");
+        bCbb = new TitledBorder("Source & Destination ");
+        bBtn = new TitledBorder("Option ");
+        
+        bChooseFile.setTitleColor(periwinkle);
+        bGraphType.setTitleColor(periwinkle);
+        bCbb.setTitleColor(periwinkle);
+        bBtn.setTitleColor(periwinkle);
 
         // panel menu
         pMenu = new JPanel();
 //        pMenu.setPreferredSize(new Dimension(450, MAXIMIZED_VERT));
         pMenu.setLayout(new GridLayout(1, 1, 50, 20));
-        pMenu.setBackground(Color.WHITE);
+        pMenu.setBackground(midNightBlue);
         pMenu.add(createMenu());
+        
+        lShortestPathLength.setForeground(periwinkle);
+        lSource.setForeground(periwinkle);
+        lTarget.setForeground(periwinkle);
+        
+        
         txtLength.setEditable(false);
         txtLength.setBorder(new LineBorder(Color.BLACK));
 //        radUndirected.isSelected();
@@ -136,9 +167,12 @@ public class myFrame extends JFrame implements ActionListener{
 
     private JPanel createMenu() {
         JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(indioInk);
 //        panel.setPreferredSize(new Dimension(450, MAXIMIZED_VERT));
         JPanel panelTop = new JPanel(new GridBagLayout());
+        panelTop.setBackground(indioInk);
         JPanel panelBottom = new JPanel(new GridBagLayout());
+        panelBottom.setBackground(indioInk);
         GridBagConstraints gbc = new GridBagConstraints();
         //gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -146,7 +180,7 @@ public class myFrame extends JFrame implements ActionListener{
 
             // Panel for group graphtype
             JPanel panelGraphType = new JPanel(new BorderLayout());
-            panelGraphType.setBorder(new TitledBorder("Graph Type"));
+            panelGraphType.setBorder(bGraphType);
                 
                 JPanel panelGraphTypeTemp = new JPanel(new GridLayout(1, 2, 20, 20));
                 panelGraphTypeTemp.setBorder(new EmptyBorder(0, 10, 0, 5));
@@ -162,7 +196,7 @@ public class myFrame extends JFrame implements ActionListener{
             // panel for group btn choose file
             
             JPanel panelFileChooser = new JPanel(new BorderLayout());
-            panelFileChooser.setBorder(new TitledBorder("Choose File"));
+            panelFileChooser.setBorder(bChooseFile);
            
                 JPanel panelFileChooserTemp = new JPanel(new BorderLayout(10, 10));
                 panelFileChooserTemp.setBorder(new EmptyBorder(0, 10, 0, 5));
@@ -174,19 +208,19 @@ public class myFrame extends JFrame implements ActionListener{
             // panel for group combobox
             
             JPanel panelCbb = new JPanel(new BorderLayout());
-            panelCbb.setBorder(new TitledBorder("Source & Destination"));
+            panelCbb.setBorder(bCbb);
             
                 JPanel panelCbbTemp = new JPanel(new GridLayout(1, 4, 20, 5));
                 panelCbbTemp.add(lSource = new JLabel("Source :"));
                 panelCbbTemp.add(cbbBeginPoint);
-                panelCbbTemp.add(lSource = new JLabel("Destination :"));
+                panelCbbTemp.add(lTarget = new JLabel("Destination :"));
                 panelCbbTemp.add(cbbEndPoint);
             
             panelCbb.add(panelCbbTemp);
         
             // panel for group btn option
             JPanel panelBtn = new JPanel(new BorderLayout());
-            panelBtn.setBorder(new TitledBorder("Option"));
+            panelBtn.setBorder(bBtn);
             
                 JPanel panelBtnTemp = new JPanel(new GridLayout(3, 1, 20, 20));
                 JPanel temp1 = new JPanel(new GridLayout(1,2,20,20));
@@ -202,6 +236,26 @@ public class myFrame extends JFrame implements ActionListener{
                 panelBtnTemp.add(temp2);
                 panelBtnTemp.add(temp3);
             panelBtn.add(panelBtnTemp);
+            
+            radDirected.setBackground(indioInk);
+            radUndirected.setBackground(indioInk);
+            radDirected.setForeground(periwinkle);
+            radUndirected.setForeground(periwinkle);
+            
+            temp1.setBackground(indioInk);
+            temp2.setBackground(indioInk);
+            temp3.setBackground(indioInk);
+            
+            panelFileChooserTemp.setBackground(indioInk);
+            panelGraphTypeTemp.setBackground(indioInk);
+            panelCbbTemp.setBackground(indioInk);
+            panelBtnTemp.setBackground(indioInk);
+            
+            
+            panelFileChooser.setBackground(indioInk);
+            panelGraphType.setBackground(indioInk);
+            panelCbb.setBackground(indioInk);
+            panelBtn.setBackground(indioInk);
             
         // thiet lap vi tri cho cac thanh phan
         gbc.gridx = 0;
