@@ -58,7 +58,7 @@ public class myFrame extends JFrame implements ActionListener{
     public static JRadioButton radUndirected, radDirected;
     public static JLabel lSource, lTarget, lUrl,lShortestPathLength;
     public static JButton btnChooseFile, btnBuild, btnExportPng, btnReset, btnShortestPath;
-    public static FileDialog fd;
+    public static FileDialog fd,fdsave;
     public static JTextField txtLength;
 //    private JTextField txtUrl;
     public static JComboBox<String> cbbBeginPoint = new JComboBox<>();
@@ -90,9 +90,23 @@ public class myFrame extends JFrame implements ActionListener{
         
         fd = new FileDialog(new Frame());
         fd.setLocationRelativeTo(null);
+//        fd.setFilenameFilter(new FilenameFilter() {
+//            public boolean accept(File dir, String name) {
+//                return name.endsWith(".txt");
+//            }
+//        });
         fd.setTitle("Open File");
         fd.setFile("*.txt");
-                
+        
+        
+        fdsave = new FileDialog(new Frame(),"Save File",FileDialog.SAVE);
+//        fdsave.setFilenameFilter(new FilenameFilter() {
+//            public boolean accept(File dir, String name) {
+//                return name.endsWith(".png");
+//            }
+//        });
+        fdsave.setFile("*.png");
+//        fdsave.setType(Type.);    
                 
         lUrl= new JLabel("File:");
 

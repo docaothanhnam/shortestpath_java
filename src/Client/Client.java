@@ -9,7 +9,6 @@ package Client;
  *
  * @author Nam Do
  */
-123123
 import static Client.myFrame.cbbBeginPoint;
 import static Client.myFrame.pContent;
 import static Client.myFrame.radUndirected;
@@ -45,6 +44,8 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultEdge;
@@ -103,24 +104,35 @@ public final class Client extends myFrame {
 
                         ArrayList<String> arrV = changeStringToArr(tmpLine[1]);
 
-                        for (String v : arrV) {
-                            cbbBeginPoint.addItem(v);
-                            cbbEndPoint.addItem(v);
-                        }
-                        cbbBeginPoint.repaint();
-                        cbbEndPoint.repaint();
+                        if (arrV != null) {
+                            for (String v : arrV) {
+                                cbbBeginPoint.addItem(v);
+                                cbbEndPoint.addItem(v);
+                            }
+                            cbbBeginPoint.setSelectedIndex(0);
+                            cbbEndPoint.setSelectedIndex(0);
+                            mo.setVertexSourceSelected(String.valueOf(cbbBeginPoint.getSelectedItem()));
+                            mo.setVertexDestinationSelected(String.valueOf(cbbEndPoint.getSelectedItem()));
+                            System.out.println("check b: " + cbbBeginPoint.getSelectedItem());
 
-                        cbbSourceVertex csv = new cbbSourceVertex();
-                        cbbBeginPoint.addActionListener(csv);
-                        cbbDestinationVertex cdv = new cbbDestinationVertex();
-                        cbbEndPoint.addActionListener(cdv);
+                            cbbBeginPoint.repaint();
+                            cbbEndPoint.repaint();
+                            cbbSourceVertex csv = new cbbSourceVertex();
+                            cbbBeginPoint.addActionListener(csv);
+                            cbbDestinationVertex cdv = new cbbDestinationVertex();
+                            cbbEndPoint.addActionListener(cdv);
+
+                            findShortestPath fsp = new findShortestPath();
+                            btnShortestPath.addActionListener(fsp);
+
+                            exportPNG ex = new exportPNG();
+                            btnExportPng.addActionListener(ex);
+
+                        }
 
                     }
 
                 }
-
-                findShortestPath fsp = new findShortestPath();
-                btnShortestPath.addActionListener(fsp);
 
 //                if(cbbBeginPoint.is){
 //                        
@@ -133,6 +145,14 @@ public final class Client extends myFrame {
 
                         System.out.println("ád:" + tmpLine[1]);
                         String[] templine = tmpLine[1].split("@");
+                        System.out.println("length: " + templine[1]);
+                        if ("Infinity".equals(templine[1])) {
+                            JOptionPane.showMessageDialog(null, "Can not find path from "
+                                    + mo.getVertexSourceSelected()
+                                    + " to "
+                                    + mo.getVertexDestinationSelected());
+
+                        }
 
                         for (String s : templine) {
                             System.out.println("--" + s);
@@ -147,9 +167,6 @@ public final class Client extends myFrame {
                     }
 
                 }
-                
-                exportPNG ex = new exportPNG();
-                btnExportPng.addActionListener(ex);
 
                 if (line == "bye") {
                     closeConnectToServer();
@@ -261,10 +278,10 @@ public final class Client extends myFrame {
 //        String re = "";
         @Override
         public void actionPerformed(ActionEvent e) {
-//            System.out.println("sd:"+mo.getVertexSourceSelected()+">"+mo.getVertexDestinationSelected()+">"+mo.getType());
+            System.out.println("sd:" + mo.getVertexSourceSelected() + ">" + mo.getVertexDestinationSelected() + ">" + mo.getType());
             try {
-                if (mo.getVertexSourceSelected().equals(mo.getVertexDestinationSelected())) {
-
+                if (!(mo.getVertexSourceSelected()).equals(mo.getVertexDestinationSelected())) {
+                    sendToServer(mo.getVertexSourceSelected() + ">" + mo.getVertexDestinationSelected() + ">" + mo.getType());
                 } else {
                     sendToServer(mo.getVertexSourceSelected() + ">" + mo.getVertexDestinationSelected() + ">" + mo.getType());
                 }
@@ -371,13 +388,13 @@ public final class Client extends myFrame {
         p.add(component, BorderLayout.CENTER);
 
         mxCircleLayout layout = new mxCircleLayout(x);
-        
+
         // center the circle
         int radius = RADIUD;
         layout.setX0((pContent.getWidth() / 2.0) - radius);
         layout.setY0((pContent.getHeight() / 2.0) - radius);
         layout.setRadius(radius);
-        
+
         layout.setMoveCircle(false);
         layout.execute(x.getDefaultParent());
 
@@ -431,7 +448,6 @@ public final class Client extends myFrame {
 
         Vertexs = changeStringToArr(V);
         Edges = changeStringToArr(E);
-
 
         DirectedWeightedMultigraph dgtemp = new DirectedWeightedMultigraph(MyEdgeWeight.class);
         for (String v : Vertexs) {
@@ -496,7 +512,6 @@ public final class Client extends myFrame {
         Vertexs = changeStringToArr(V);
         Edges = changeStringToArr(E);
 
-
         WeightedMultigraph udgtemp = new WeightedMultigraph(MyEdgeWeight.class);
         for (String v : Vertexs) {
             udgtemp.addVertex(v);
@@ -514,7 +529,6 @@ public final class Client extends myFrame {
         return udgtemp;
     }
 
-
 //===========================painting Edge ============================================
     public void paintEdge(ArrayList Edges, JGraphXAdapter x) {
         System.out.println("nmo:" + Edges);
@@ -524,7 +538,6 @@ public final class Client extends myFrame {
         System.out.println("jkl:" + E);
 
         System.out.println("abc:" + mo.getArrEdge());
-
 
         ArrayList<MyEdgeWeight> Edge = mo.getMyWeight();
         /// chuwa lay duoc mang defaultEdge
@@ -561,16 +574,21 @@ public final class Client extends myFrame {
 
         }
     }
-  //====================create  btn export PNG========================================
-    public class exportPNG implements ActionListener{
-        public exportPNG(){
-            
+    //====================create  btn export PNG========================================
+
+    public class exportPNG implements ActionListener {
+
+        public exportPNG() {
+
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            fdsave.setVisible(true);
+            String tmpName = fdsave.getFile();
+
             try {
-                givenAdaptedGraph_whenWriteBufferedImage_thenFileShouldExist(x);
+                givenAdaptedGraph_whenWriteBufferedImage_thenFileShouldExist(x, tmpName);
             } catch (IOException ex) {
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -610,23 +628,23 @@ public final class Client extends myFrame {
         System.out.println("Client get: " + tmp + " from server");
         return tmp;
     }
-    
-    public void givenAdaptedGraph_whenWriteBufferedImage_thenFileShouldExist(JGraphXAdapter graphAdapter) throws IOException {
+
+    public void givenAdaptedGraph_whenWriteBufferedImage_thenFileShouldExist(JGraphXAdapter graphAdapter, String nameFile) throws IOException {
 
         mxIGraphLayout layout = new mxCircleLayout(graphAdapter);
-        
+
         layout.execute(graphAdapter.getDefaultParent());
 
         BufferedImage image = mxCellRenderer
                 .createBufferedImage(graphAdapter, null, 2, Color.WHITE, true, null);
-        
-        File imgFile = new File("src/graph.png");
-        
-        ImageIO.write(scale(image,pContent.getHeight(),pContent.getHeight()), "PNG", imgFile);
+
+        File imgFile = new File("src/" + nameFile + ".png");
+
+        ImageIO.write(scale(image, pContent.getWidth(), pContent.getHeight()), "PNG", imgFile);
         imgFile.exists();
 //        assertTrue(imgFile.exists());
     }
-    
+
     public static BufferedImage scale(BufferedImage src, int w, int h) {
         BufferedImage img
                 = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
