@@ -92,7 +92,7 @@ public class myFrame extends JFrame implements ActionListener{
         periwinkle = new Color(208, 225, 249);
         cContent = new Color(124, 135, 161);
         
-        getContentPane().setBackground(Color.BLUE);
+//        getContentPane().setBackground(Color.BLUE);
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(WIDTH, HEIGHT);
@@ -110,6 +110,7 @@ public class myFrame extends JFrame implements ActionListener{
 //        });
         fd.setTitle("Open File");
         fd.setFile("*.txt");
+        
         
         
         fdsave = new FileDialog(new Frame(),"Save File",FileDialog.SAVE);

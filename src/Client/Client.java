@@ -25,7 +25,6 @@ import myEdge.MyEdgeWeight;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -47,7 +46,6 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -84,11 +82,11 @@ public final class Client extends myFrame {
         try {
             connectToServer();
             String line = "";
-
+            FileChooser fc = new FileChooser(); // send to server data
+            btnChooseFile.addActionListener(fc);
             while (true) {
                 
-                FileChooser fc = new FileChooser(); // send to server data
-                btnChooseFile.addActionListener(fc);
+                
 //                if(mo.getURL() != null){
 //                    
 //                    System.out.println("asdas"+mo.getURL());
@@ -110,12 +108,13 @@ public final class Client extends myFrame {
                         radDirected.addActionListener(gt);
                         radUndirected.addActionListener(gt);
 
-                        buildGraph bg = new buildGraph(tmpLine[1], String.valueOf(mo.getArr()));
-                        btnBuild.addActionListener(bg);
+                        
 
                         ArrayList<String> arrV = changeStringToArr(tmpLine[1]);
 
                         if (arrV != null) {
+                            buildGraph bg = new buildGraph(tmpLine[1], String.valueOf(mo.getArr()));
+                        btnBuild.addActionListener(bg);
                             for (String v : arrV) {
                                 cbbBeginPoint.addItem(v);
                                 cbbEndPoint.addItem(v);
@@ -179,6 +178,9 @@ public final class Client extends myFrame {
                     }
 
                 }
+                
+                resetAll btnrs = new resetAll();
+                btnReset.addActionListener(btnrs);
 
                 if (line == "bye") {
                     closeConnectToServer();
@@ -215,7 +217,8 @@ public final class Client extends myFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
+            fd.setFile("*.txt");
+            
             fd.setVisible(true);
             if(fd.getFile()==null){
                 JOptionPane.showMessageDialog(null, "File have not chosen yet");
@@ -302,8 +305,8 @@ public final class Client extends myFrame {
         public void actionPerformed(ActionEvent e) {
             System.out.println("sd:" + mo.getVertexSourceSelected() + ">" + mo.getVertexDestinationSelected() + ">" + mo.getType());
             try {
-                if (!(mo.getVertexSourceSelected()).equals(mo.getVertexDestinationSelected())) {
-                    sendToServer(mo.getVertexSourceSelected() + ">" + mo.getVertexDestinationSelected() + ">" + mo.getType());
+                if (mo.getVertexSourceSelected()==null||mo.getVertexDestinationSelected()==null) {
+                    JOptionPane.showMessageDialog(null, "No data available");
                 } else {
                     sendToServer(mo.getVertexSourceSelected() + ">" + mo.getVertexDestinationSelected() + ">" + mo.getType());
                 }
@@ -342,7 +345,7 @@ public final class Client extends myFrame {
 
     public class buildGraph implements ActionListener {
 
-        public String vertex, edge;
+        public  String vertex, edge;
 //        public JGraphXAdapter x;
 //        public int type = mo.getType();
 
@@ -607,6 +610,30 @@ public final class Client extends myFrame {
 
         }
     }
+    //====================create btn reset =============================================
+    // chưa hoàn thành
+    public class resetAll implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+            mo.setURL(null);
+            mo.setArr(null);
+            mo.setArrEdge(null);
+            mo.setMyWeight(null);
+            mo.setVertexDestinationSelected(null);
+            mo.setVertexSourceSelected(null);
+//            x = null;
+            lUrl.setText("File:");
+            txtLength.setText(null);
+            radUndirected.setSelected(true);
+            pContent.removeAll();
+            cbbBeginPoint.removeAllItems();
+            cbbEndPoint.removeAllItems();
+            repaint();
+            
+        }
+    }
+    
     //====================create  btn export PNG========================================
 
     public class exportPNG implements ActionListener {
@@ -617,6 +644,7 @@ public final class Client extends myFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            fdsave.setFile("*.png");
             fdsave.setVisible(true);
             String tmpName = fdsave.getFile();
 
