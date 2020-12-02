@@ -114,7 +114,7 @@ public final class Client extends myFrame {
 
                         if (arrV != null) {
                             buildGraph bg = new buildGraph(tmpLine[1], String.valueOf(mo.getArr()));
-                        btnBuild.addActionListener(bg);
+                            btnBuild.addActionListener(bg);
                             for (String v : arrV) {
                                 cbbBeginPoint.addItem(v);
                                 cbbEndPoint.addItem(v);
@@ -692,14 +692,6 @@ public final class Client extends myFrame {
 
     public void givenAdaptedGraph_whenWriteBufferedImage_thenFileShouldExist(JGraphXAdapter graphAdapter, String nameFile) throws IOException {
 
-        mxCircleLayout layout = new mxCircleLayout(graphAdapter);
-        int radius = RADIUS;
-        layout.setX0((pContent.getWidth() / 2) - radius);
-        layout.setY0((pContent.getHeight() / 2) - radius);
-        layout.setRadius(radius);
-        layout.setMoveCircle(false);
-        layout.execute(x.getDefaultParent());
-        layout.execute(graphAdapter.getDefaultParent());
 
         BufferedImage image = mxCellRenderer
                 .createBufferedImage(graphAdapter, null, 2, Color.WHITE, true, null);
